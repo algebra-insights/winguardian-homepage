@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WinGuardian - Windows System Protection Software</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Tahoma, Verdana, Arial, sans-serif;
+            font-size: 11px;
+            background: #5a8bc4;
+            color: #000;
+        }
+
+        /* Classic Windows XP Blue Gradient Background */
+        .xp-background {
+            background: linear-gradient(to bottom, #5a8bc4 0%, #245edb 50%, #5a8bc4 100%);
+            min-height: 100vh;
+        }
+
+        /* Classic Window Style Container */
+        .window {
+            background: #ece9d8;
+            border: 3px solid;
+            border-color: #fff #555 #555 #fff;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            margin: 20px auto;
+            max-width: 900px;
+        }
+
+        /* Window Title Bar */
+        .titlebar {
+            background: linear-gradient(to bottom, #0058e0 0%, #3998ff 50%, #0058e0 100%);
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .titlebar-text {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .titlebar-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .titlebar-buttons {
+            display: flex;
+            gap: 2px;
+        }
+
+        .titlebar-btn {
+            width: 21px;
+            height: 21px;
+            background: linear-gradient(to bottom, #3072e0 0%, #1050d0 100%);
+            border: 1px solid;
+            border-color: #7ba5e6 #1a3b90 #1a3b90 #7ba5e6;
+            color: white;
+            font-size: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .titlebar-btn:hover {
+            background: linear-gradient(to bottom, #4082f0 0%, #2060e0 100%);
+        }
+
+        .titlebar-btn:active {
+            border-color: #1a3b90 #7ba5e6 #7ba5e6 #1a3b90;
+        }
+
+        /* Window Content */
+        .window-content {
+            padding: 15px;
+        }
+
+        /* Classic XP Button */
+        .xp-button {
+            background: linear-gradient(to bottom, #f7f7f7 0%, #d0d0d0 100%);
+            border: 1px solid;
+            border-color: #fff #606060 #606060 #fff;
+            padding: 5px 15px;
+            font-family: Tahoma, sans-serif;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+        }
+
+        .xp-button:hover {
+            background: linear-gradient(to bottom, #fff 0%, #e0e0e0 100%);
+            border-color: #3399ff;
+        }
+
+        .xp-button:active {
+            border-color: #606060 #fff #fff #606060;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .xp-button-primary {
+            background: linear-gradient(to bottom, #6eb4ff 0%, #0066cc 100%);
+            color: white;
+            font-weight: bold;
+            border-color: #8fc6ff #004499 #004499 #8fc6ff;
+        }
+
+        .xp-button-primary:hover {
+            background: linear-gradient(to bottom, #7ec4ff 0%, #1076dc 100%);
+        }
+
+        /* Groupbox (Fieldset) */
+        .groupbox {
+            border: 2px groove #fff;
+            padding: 15px;
+            margin: 15px 0;
+            background: #f0f0f0;
+        }
+
+        .groupbox legend {
+            padding: 0 5px;
+            font-weight: bold;
+            color: #00007f;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 30px 15px;
+            background: #fff;
+            border-bottom: 2px solid #0058e0;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #003399;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px #ccc;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        /* Tab-like Navigation */
+        .tab-nav {
+            display: flex;
+            background: #d4d0c8;
+            border-bottom: 2px solid #808080;
+            padding: 5px 10px 0 10px;
+        }
+
+        .tab-item {
+            background: linear-gradient(to bottom, #f0f0f0 0%, #c0c0c0 100%);
+            border: 2px solid;
+            border-color: #fff #808080 #808080 #fff;
+            border-bottom: none;
+            padding: 6px 20px;
+            margin-right: 2px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .tab-item:hover {
+            background: linear-gradient(to bottom, #fff 0%, #d0d0d0 100%);
+        }
+
+        .tab-item.active {
+            background: #ece9d8;
+            border-bottom: 2px solid #ece9d8;
+            margin-bottom: -2px;
+            padding-bottom: 8px;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .feature-box {
+            background: #fff;
+            border: 2px groove #808080;
+            padding: 12px;
+        }
+
+        .feature-box h3 {
+            color: #00007f;
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .feature-box p {
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        /* Screenshot Gallery */
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .screenshot-item {
+            background: #fff;
+            border: 2px inset #808080;
+            padding: 8px;
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #000;
+            display: block;
+        }
+
+        .screenshot-label {
+            background: #d4d0c8;
+            padding: 5px;
+            margin-top: 5px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 11px;
+            border: 1px solid;
+            border-color: #fff #808080 #808080 #fff;
+        }
+
+        /* System Requirements Box */
+        .sysreq-box {
+            background: #ffffe1;
+            border: 1px solid #000;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        .sysreq-box h4 {
+            color: #00007f;
+            margin-bottom: 8px;
+        }
+
+        /* Download Box */
+        .download-box {
+            background: linear-gradient(to bottom, #ffd700 0%, #ffb000 100%);
+            border: 3px ridge #808080;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .download-box h3 {
+            font-size: 16px;
+            color: #000080;
+            margin-bottom: 15px;
+        }
+
+        /* Pricing Table */
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #fff;
+        }
+
+        .pricing-table th {
+            background: linear-gradient(to bottom, #0058e0 0%, #0040a0 100%);
+            color: white;
+            padding: 8px;
+            border: 1px solid #003080;
+            font-size: 12px;
+        }
+
+        .pricing-table td {
+            border: 1px solid #808080;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .pricing-table tr:nth-child(even) {
+            background: #f0f0f0;
+        }
+
+        /* Footer */
+        .footer {
+            background: #d4d0c8;
+            border-top: 2px solid #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        /* Start Button Style */
+        .start-button {
+            background: linear-gradient(to right, #3fae2a 0%, #4fc73f 50%, #3fae2a 100%);
+            color: white;
+            font-weight: bold;
+            padding: 8px 25px;
+            border: 1px outset #5fd44f;
+            border-radius: 0 10px 10px 0;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+        }
+
+        .start-button:hover {
+            background: linear-gradient(to right, #4fbe3a 0%, #5fd74f 50%, #4fbe3a 100%);
+        }
+
+        .start-button:active {
+            border-style: inset;
+        }
+
+        /* Icons */
+        .icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+        }
+
+        hr.xp-separator {
+            border: none;
+            border-top: 1px solid #808080;
+            border-bottom: 1px solid #fff;
+            margin: 15px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .window {
+                margin: 10px;
+                max-width: 100%;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .features-grid,
+            .screenshot-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-nav {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body class="xp-background">
+
+    <!-- Main Window -->
+    <div class="window">
+        <!-- Title Bar -->
+        <div class="titlebar">
+            <div class="titlebar-text">
+                <span class="titlebar-icon">🛡️</span>
+                <span>WinGuardian - System Protection Software</span>
+            </div>
+            <div class="titlebar-buttons">
+                <button class="titlebar-btn" title="Minimize">_</button>
+                <button class="titlebar-btn" title="Maximize">□</button>
+                <button class="titlebar-btn" title="Close">×</button>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>🛡️ WinGuardian</h1>
+            <p><strong>Professional Windows System Protection & Recovery Software</strong></p>
+            <p>Protect your critical files • Backup your system • Restore with confidence</p>
+            <p style="margin-top: 15px;">
+                <button class="start-button" onclick="scrollToSection('download')">▶ Download Now</button>
+            </p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <div class="tab-item active" onclick="showTab('features')">Features</div>
+            <div class="tab-item" onclick="showTab('screenshots')">Screenshots</div>
+            <div class="tab-item" onclick="showTab('pricing')">Pricing</div>
+            <div class="tab-item" onclick="showTab('download')">Download</div>
+        </div>
+
+        <!-- Content -->
+        <div class="window-content">
+
+            <!-- Features Tab -->
+            <div id="features" class="content-section active">
+                <fieldset class="groupbox">
+                    <legend>🔍 Core Features</legend>
+
+                    <div class="features-grid">
+                        <div class="feature-box">
+                            <h3>📁 File Integrity Monitor</h3>
+                            <p>Real-time monitoring of critical system files using SHA-256 hash verification. Detect unauthorized changes instantly.</p>
+                        </div>
+
+                        <div class="feature-box">
+                            <h3>💾 AppData Backup</h3>
+                            <p>Smart backup of application data with folder organization. Restore individual files or entire directories.</p>
+                        </div>
+
+                        <div class="feature-box">
+                            <h3>📋 Registry Snapshots</h3>
+                            <p>Create and restore Windows Registry snapshots. Perfect for troubleshooting and malware recovery.</p>
+                        </div>
+
+                        <div class="feature-box">
+                            <h3>🔐 Military Encryption</h3>
+                            <p>AES-256-GCM encryption protects all backups. Your data stays secure even if storage is compromised.</p>
+                        </div>
+
+                        <div class="feature-box">
+                            <h3>⚡ Background Service</h3>
+                            <p>Lightweight Windows service monitors continuously without impacting system performance.</p>
+                        </div>
+
+                        <div class="feature-box">
+                            <h3>📊 Detailed Logs</h3>
+                            <p>Comprehensive audit trail of all changes, backups, and restore operations with timestamps.</p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="groupbox">
+                    <legend>✨ Key Benefits</legend>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li>✓ Protect against malware and unauthorized file modifications</li>
+                        <li>✓ Quick recovery from system corruption or configuration issues</li>
+                        <li>✓ Meet compliance requirements for file integrity monitoring</li>
+                        <li>✓ Save hours of troubleshooting time with one-click restore</li>
+                        <li>✓ Lightweight and efficient - minimal system resources</li>
+                        <li>✓ Built specifically for Windows 10 and Windows 11</li>
+                    </ul>
+                </fieldset>
+
+                <fieldset class="groupbox">
+                    <legend>👥 Perfect For</legend>
+                    <div class="features-grid">
+                        <div class="feature-box">
+                            <h3>System Administrators</h3>
+                            <p>Monitor servers and workstations for unauthorized changes.</p>
+                        </div>
+                        <div class="feature-box">
+                            <h3>Security Professionals</h3>
+                            <p>Detect malware and maintain system integrity baselines.</p>
+                        </div>
+                        <div class="feature-box">
+                            <h3>IT Support Teams</h3>
+                            <p>Troubleshoot issues by restoring known-good configurations.</p>
+                        </div>
+                        <div class="feature-box">
+                            <h3>Power Users</h3>
+                            <p>Protect personal data and recover from accidental changes.</p>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Screenshots Tab -->
+            <div id="screenshots" class="content-section">
+                <fieldset class="groupbox">
+                    <legend>📸 Application Screenshots</legend>
+
+                    <div class="screenshot-grid">
+                        <div class="screenshot-item">
+                            <img src="Dashboard.PNG" alt="Dashboard" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22400%22 height=%22250%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23666%22%3EDashboard.PNG%3C/text%3E%3C/svg%3E'">
+                            <div class="screenshot-label">Dashboard Overview</div>
+                        </div>
+
+                        <div class="screenshot-item">
+                            <img src="Files.PNG" alt="File Monitor" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22400%22 height=%22250%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23666%22%3EFiles.PNG%3C/text%3E%3C/svg%3E'">
+                            <div class="screenshot-label">File Integrity Monitor</div>
+                        </div>
+
+                        <div class="screenshot-item">
+                            <img src="AppData.PNG" alt="AppData Backup" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22400%22 height=%22250%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23666%22%3EAppData.PNG%3C/text%3E%3C/svg%3E'">
+                            <div class="screenshot-label">AppData Backup & Restore</div>
+                        </div>
+
+                        <div class="screenshot-item">
+                            <img src="Registry.PNG" alt="Registry" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22400%22 height=%22250%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23666%22%3ERegistry.PNG%3C/text%3E%3C/svg%3E'">
+                            <div class="screenshot-label">Registry Snapshots</div>
+                        </div>
+
+                        <div class="screenshot-item">
+                            <img src="Logs.PNG" alt="Logs" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22400%22 height=%22250%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23666%22%3ELogs.PNG%3C/text%3E%3C/svg%3E'">
+                            <div class="screenshot-label">Activity Logs</div>
+                        </div>
+
+                        <div class="screenshot-item">
+                            <img src="Settings.PNG" alt="Settings" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22400%22 height=%22250%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23666%22%3ESettings.PNG%3C/text%3E%3C/svg%3E'">
+                            <div class="screenshot-label">Settings & Configuration</div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Pricing Tab -->
+            <div id="pricing" class="content-section">
+                <fieldset class="groupbox">
+                    <legend>💰 Pricing Plans</legend>
+
+                    <table class="pricing-table">
+                        <thead>
+                            <tr>
+                                <th>License Type</th>
+                                <th>Price</th>
+                                <th>Computers</th>
+                                <th>Support</th>
+                                <th>Updates</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Personal</strong></td>
+                                <td><strong>$49</strong><br><small>One-time payment</small></td>
+                                <td>1 PC</td>
+                                <td>Email support</td>
+                                <td>1 year free</td>
+                            </tr>
+                            <tr style="background: #ffffcc;">
+                                <td><strong>Professional</strong><br><small>⭐ Most Popular</small></td>
+                                <td><strong>$149</strong><br><small>One-time payment</small></td>
+                                <td>Up to 5 PCs</td>
+                                <td>Priority support</td>
+                                <td>2 years free</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Enterprise</strong></td>
+                                <td><strong>Custom</strong><br><small>Contact sales</small></td>
+                                <td>Unlimited</td>
+                                <td>24/7 phone support</td>
+                                <td>Lifetime</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="text-align: center; margin-top: 15px; padding: 10px; background: #ffffe1; border: 1px solid #000;">
+                        <strong>✓ 30-day money-back guarantee</strong><br>
+                        <strong>✓ No subscriptions required</strong><br>
+                        <strong>✓ Buy once, use forever</strong>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Download Tab -->
+            <div id="download" class="content-section">
+                <div class="download-box">
+                    <h3>📥 Download WinGuardian</h3>
+                    <p style="margin-bottom: 15px; font-size: 12px;"><strong>Current Version: 0.2.0</strong></p>
+                    <button class="xp-button xp-button-primary" style="font-size: 13px; padding: 10px 30px;">
+                        Download for Windows 10/11 (64-bit)
+                    </button>
+                    <p style="margin-top: 10px; font-size: 10px;">~ 8 MB • Free 30-day trial</p>
+                </div>
+
+                <fieldset class="groupbox">
+                    <legend>⚙️ System Requirements</legend>
+                    <div class="sysreq-box">
+                        <h4>Minimum Requirements:</h4>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>Operating System:</strong> Windows 10 (64-bit) or Windows 11</li>
+                            <li><strong>Processor:</strong> Intel/AMD x64 compatible processor</li>
+                            <li><strong>Memory:</strong> 4 GB RAM minimum (8 GB recommended)</li>
+                            <li><strong>Storage:</strong> 100 MB for application + space for backups</li>
+                            <li><strong>Display:</strong> 1024x768 minimum resolution</li>
+                            <li><strong>Other:</strong> Administrator privileges required for installation</li>
+                        </ul>
+                    </div>
+                </fieldset>
+
+                <fieldset class="groupbox">
+                    <legend>📝 Installation Instructions</legend>
+                    <ol style="margin-left: 20px; line-height: 2;">
+                        <li>Download the installer using the button above</li>
+                        <li>Run <strong>winguardian-setup.exe</strong> as Administrator</li>
+                        <li>Follow the installation wizard</li>
+                        <li>Launch WinGuardian from Start Menu or Desktop</li>
+                        <li>Enter your license key (or start free trial)</li>
+                        <li>Configure your first baseline and start protecting!</li>
+                    </ol>
+                </fieldset>
+
+                <fieldset class="groupbox">
+                    <legend>🔗 Additional Resources</legend>
+                    <div style="line-height: 2;">
+                        <p><a href="https://docs.winguardian.com" style="color: #00f;">📖 User Documentation & Manual</a></p>
+                        <p><a href="https://support.winguardian.com" style="color: #00f;">🛠️ Technical Support Portal</a></p>
+                        <p><a href="https://github.com/winguardian" style="color: #00f;">💻 GitHub Repository</a></p>
+                        <p><a href="mailto:support@winguardian.com" style="color: #00f;">✉️ Email Support</a></p>
+                    </div>
+                </fieldset>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <hr class="xp-separator">
+            <p><strong>WinGuardian</strong> - Professional System Protection for Windows</p>
+            <p style="margin: 5px 0;">
+                <a href="privacy.html">Privacy Policy</a> •
+                <a href="terms.html">Terms of Service</a> •
+                <a href="mailto:contact@winguardian.com">Contact</a>
+            </p>
+            <p style="margin-top: 10px;">© 2026 WinGuardian. All rights reserved.</p>
+            <p style="margin-top: 5px; color: #666;">Built with Rust 🦀 for Windows 10 and Windows 11</p>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all content sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab-item');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected content section
+            document.getElementById(tabName).classList.add('active');
+
+            // Activate selected tab
+            event.target.classList.add('active');
+        }
+
+        function scrollToSection(sectionId) {
+            showTab(sectionId);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
