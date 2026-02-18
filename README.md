@@ -34,7 +34,7 @@ Replace placeholder emails and links:
 
 ### Update Pricing
 
-Modify the pricing section if your actual prices differ from the placeholders ($49, $149, Custom).
+Modify the pricing section if your actual prices differ from the placeholders ($10, $149, Custom).
 
 ### Update Version Number
 
