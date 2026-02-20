@@ -359,6 +359,85 @@
             margin: 15px 0;
         }
 
+        /* Purchase Confirmation Dialog */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal-dialog {
+            background: #ece9d8;
+            border: 3px solid;
+            border-color: #fff #555 #555 #fff;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+            width: 420px;
+            max-width: 95vw;
+        }
+
+        .modal-titlebar {
+            background: linear-gradient(to bottom, #0058e0 0%, #3998ff 50%, #0058e0 100%);
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .modal-titlebar-text {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-icon-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .modal-info-icon {
+            font-size: 32px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .modal-message {
+            font-size: 11px;
+            line-height: 1.7;
+            color: #000;
+        }
+
+        .modal-message strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 10px 20px 15px;
+            border-top: 1px solid #aca899;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .window {
@@ -574,7 +653,7 @@
                                 <td>1 PC</td>
                                 <td>Email support</td>
                                 <td>1 year free</td>
-                                <td><a href="https://buy.stripe.com/7sYfZ92Pu6QQfXk1gh7wA06" target="_blank"><button class="xp-button xp-button-primary" style="white-space:nowrap;">Buy Now</button></a></td>
+                                <td><button class="xp-button xp-button-primary" style="white-space:nowrap;" onclick="openBuyModal('https://buy.stripe.com/7sYfZ92Pu6QQfXk1gh7wA06')">Buy Now</button></td>
                             </tr>
                             <tr style="background: #ffffcc;">
                                 <td><strong>Professional</strong><br><small>⭐ Most Popular</small></td>
@@ -582,7 +661,7 @@
                                 <td>Up to 5 PCs</td>
                                 <td>Priority support</td>
                                 <td>2 years free</td>
-                                <td><a href="https://buy.stripe.com/14A6ozcq47UU26u5wx7wA07" target="_blank"><button class="xp-button xp-button-primary" style="white-space:nowrap;">Buy Now</button></a></td>
+                                <td><button class="xp-button xp-button-primary" style="white-space:nowrap;" onclick="openBuyModal('https://buy.stripe.com/14A6ozcq47UU26u5wx7wA07')">Buy Now</button></td>
                             </tr>
                             <tr>
                                 <td><strong>Enterprise</strong></td>
@@ -658,6 +737,32 @@
 
         </div>
 
+        <!-- Purchase Confirmation Dialog -->
+        <div class="modal-overlay" id="buyModal">
+            <div class="modal-dialog">
+                <div class="modal-titlebar">
+                    <div class="modal-titlebar-text">
+                        <span>🛒</span>
+                        <span>Purchase Information</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-icon-row">
+                        <div class="modal-info-icon">ℹ️</div>
+                        <div class="modal-message">
+                            <strong>Before you proceed to checkout:</strong>
+                            After completing your purchase, your license serial number will be sent to your email address within <strong>24 hours</strong>.<br><br>
+                            Please make sure to enter a valid email address at checkout so we can deliver your license key promptly.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="xp-button xp-button-primary" id="modalConfirm">Proceed to Purchase</button>
+                    <button class="xp-button" id="modalCancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <div class="footer">
             <hr class="xp-separator">
@@ -696,8 +801,32 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Email protection: decode base64 parts and set mailto href on interaction
+        // Purchase confirmation modal
+        var _buyUrl = '';
+
+        function openBuyModal(url) {
+            _buyUrl = url;
+            document.getElementById('buyModal').classList.add('visible');
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
+            // Purchase confirmation modal
+            document.getElementById('modalConfirm').addEventListener('click', function () {
+                document.getElementById('buyModal').classList.remove('visible');
+                window.open(_buyUrl, '_blank');
+            });
+
+            document.getElementById('modalCancel').addEventListener('click', function () {
+                document.getElementById('buyModal').classList.remove('visible');
+            });
+
+            document.getElementById('buyModal').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    this.classList.remove('visible');
+                }
+            });
+
+            // Email protection: decode base64 parts and set mailto href on interaction
             document.querySelectorAll('a.email-link').forEach(function (el) {
                 el.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -705,7 +834,6 @@
                     var d = atob(el.dataset.domain);
                     window.location.href = 'mailto:' + u + '@' + d;
                 });
-                // Also set title on hover so it's usable but not trivially scraped
                 el.addEventListener('mouseenter', function () {
                     if (!el.title) {
                         el.title = atob(el.dataset.user) + '@' + atob(el.dataset.domain);
